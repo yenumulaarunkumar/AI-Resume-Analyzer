@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from skills import extract_skills
+from score import calculate_score
 import pdfplumber
 
 app = Flask(__name__)
@@ -22,11 +23,13 @@ def upload():
                     text += page_text + "\n"
 
         skills = extract_skills(text)
+        score = calculate_score(skills)
 
         return render_template(
             "result.html",
             skills=skills,
-            text=text
+            text=text,
+            score=score
         )
 
     return "No file selected"

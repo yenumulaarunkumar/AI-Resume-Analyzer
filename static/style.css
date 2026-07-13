@@ -1,0 +1,41 @@
+body{
+    margin:0;
+    padding:40px;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+}
+
+.container{
+    width:80%;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+h1{
+    color:#2563eb;
+}
+
+.score{
+    font-size:30px;
+    color:green;
+    font-weight:bold;
+}
+
+.skill{
+    display:inline-block;
+    background:#2563eb;
+    color:white;
+    padding:8px 15px;
+    margin:5px;
+    border-radius:20px;
+}
+
+pre{
+    background:#eee;
+    padding:20px;
+    border-radius:10px;
+    white-space:pre-wrap;
+}
