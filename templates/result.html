@@ -3,29 +3,41 @@
 <head>
     <title>AI Resume Analyzer</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>AI Resume Analyzer</h1>
+    <h1>AI Resume Analyzer</h1>
 
-<div class="score">
-ATS Score : {{ score }}/100
-</div>
+    <div class="score">
+        ATS Score: {{ score }}/100
+    </div>
 
-<h2>Detected Skills</h2>
+    <h2>Resume Match: {{ match }}%</h2>
 
-{% for skill in skills %}
-<span class="skill">{{ skill }}</span>
-{% endfor %}
+    <h2>Detected Skills</h2>
 
-<h2>Extracted Resume</h2>
+    {% for skill in skills %}
+        <span class="skill">{{ skill }}</span>
+    {% endfor %}
+    <h2>Missing Skills</h2>
 
-<pre>{{ text }}</pre>
+{% if missing %}
+    {% for skill in missing %}
+        <span class="skill" style="background:red;">
+            {{ skill }}
+        </span>
+    {% endfor %}
+{% else %}
+    <p>No missing skills found.</p>
+{% endif %}
+
+    <h2>Extracted Resume</h2>
+
+    <pre>{{ text }}</pre>
 
 </div>
 
