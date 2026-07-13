@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from skills import extract_skills
 import pdfplumber
 
 app = Flask(__name__)
@@ -10,6 +11,25 @@ def home():
 @app.route("/upload", methods=["POST"])
 def upload():
     file = request.files["resume"]
+
+    if file:
+        text = ""
+
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+
+        skills = extract_skills(text)
+
+        return render_template(
+            "result.html",
+            skills=skills,
+            text=text
+        )
+
+    return "No file selected"
 
     if file:
         text = ""
