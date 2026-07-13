@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from skills import extract_skills
 from score import calculate_score
 from matcher import calculate_match
+from suggestions import generate_suggestions
 from missing_skills import find_missing_skills
 import pdfplumber
 
@@ -40,6 +41,7 @@ def upload():
 
         # Find Missing Skills
         missing_skills = find_missing_skills(text, job_description)
+        suggestions = generate_suggestions(missing_skills)
 
         return render_template(
             "result.html",
@@ -47,7 +49,8 @@ def upload():
             text=text,
             score=score,
             match=match_percentage,
-            missing=missing_skills
+            missing=missing_skills,
+            suggestions=suggestions
         )
 
     return "No file selected"
