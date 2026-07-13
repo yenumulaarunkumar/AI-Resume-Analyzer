@@ -27,6 +27,7 @@ MarkupSafe==3.0.3
 mdurl==0.1.2
 murmurhash==1.0.15
 narwhals==2.24.0
+nitk==0.1
 nltk==3.10.0
 numpy==2.4.3
 packaging==26.2
