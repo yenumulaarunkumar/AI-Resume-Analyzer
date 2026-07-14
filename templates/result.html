@@ -1,99 +1,143 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>AI Resume Analyzer</title>
 
-<title>AI Resume Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='style.css') }}">
-
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <div class="container mt-5">
 
-<div class="card shadow-lg p-5">
+    <div class="card shadow-lg p-5">
 
-<h1 class="text-center text-primary">
-AI Resume Analyzer
-</h1>
+        <h1 class="text-center text-primary mb-5">
+            AI Resume Analyzer
+        </h1>
 
-<div class="score">
+        <!-- Dashboard Cards -->
+        <div class="row text-center mb-4">
 
-ATS Score: {{ score }}/100
+            <div class="col-md-3 mb-3">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-chart-line fa-2x mb-3"></i>
+                        <h3>{{ score }}/100</h3>
+                        <p>ATS Score</p>
+                    </div>
+                </div>
+            </div>
 
-</div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-file-lines fa-2x mb-3"></i>
+                        <h3>{{ match }}%</h3>
+                        <p>Resume Match</p>
+                    </div>
+                </div>
+            </div>
 
-<div class="alert alert-info text-center">
+            <div class="col-md-3 mb-3">
+                <div class="card bg-info text-white h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-code fa-2x mb-3"></i>
+                        <h3>{{ skills|length }}</h3>
+                        <p>Skills Found</p>
+                    </div>
+                </div>
+            </div>
 
-<h4>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-danger text-white h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-triangle-exclamation fa-2x mb-3"></i>
+                        <h3>{{ missing|length }}</h3>
+                        <p>Missing Skills</p>
+                    </div>
+                </div>
+            </div>
 
-Resume Match: {{ match }}%
+        </div>
 
-</h4>
+        <hr>
 
-</div>
+        <h3>Detected Skills</h3>
 
-<h3>Detected Skills</h3>
+        {% for skill in skills %}
+            <span class="badge bg-success p-2 m-1 fs-6">
+                {{ skill }}
+            </span>
+        {% endfor %}
 
-{% for skill in skills %}
-<span class="skill">
-{{ skill }}
-</span>
-{% endfor %}
+        <hr>
 
+        <h3>Missing Skills</h3>
+
+        {% if missing %}
+            {% for skill in missing %}
+                <span class="badge bg-danger p-2 m-1 fs-6">
+                    {{ skill }}
+                </span>
+            {% endfor %}
+        {% else %}
+            <p class="text-success">🎉 No missing skills found.</p>
+        {% endif %}
+
+        <hr>
 <hr>
 
-<h3>Missing Skills</h3>
+<h3>Skills Analysis</h3>
 
-{% if missing %}
-
-{% for skill in missing %}
-
-<span class="badge bg-danger p-2 m-1">
-
-{{ skill }}
-
-</span>
-
-{% endfor %}
-
-{% else %}
-
-<p>No missing skills 🎉</p>
-
-{% endif %}
-
-<hr>
-
-<h3>Suggestions</h3>
-
-<ul>
-
-{% for suggestion in suggestions %}
-
-<li>{{ suggestion }}</li>
-
-{% endfor %}
-
-</ul>
-
-<hr>
-
-<h3>Extracted Resume</h3>
-
-<pre>
-
-{{ text }}
-
-</pre>
-
+<div style="width:400px; margin:auto;">
+    <canvas id="skillsChart"></canvas>
 </div>
 
-</div>
+<hr>
+        <h3>Suggestions</h3>
 
+        {% if suggestions %}
+            <ul class="list-group">
+                {% for suggestion in suggestions %}
+                    <li class="list-group-item">
+                        {{ suggestion }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-success">Your resume already covers the required skills.</p>
+        {% endif %}
+
+        <hr>
+
+        <h3>Extracted Resume</h3>
+
+        <pre>{{ text }}</pre>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('skillsChart');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Skills Found', 'Missing Skills'],
+        datasets: [{
+            data: [{{ skills|length }}, {{ missing|length }}]
+        }]
+    }
+});
+</script>
 </body>
 </html>
