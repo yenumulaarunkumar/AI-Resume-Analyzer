@@ -22,15 +22,23 @@ AI Resume Analyzer
 
 <div class="mb-4">
 
-<label class="form-label">
-Upload Resume (PDF)
-</label>
+    <label class="form-label">Upload Resume (PDF)</label>
 
-<input
-type="file"
-name="resume"
-class="form-control"
-required>
+    <div id="drop-area" class="border border-primary rounded p-5 text-center">
+
+        <p>📄 Drag & Drop Resume Here</p>
+
+        <p>or</p>
+
+        <input
+            type="file"
+            name="resume"
+            id="resume"
+            class="form-control"
+            accept=".pdf"
+            required>
+
+    </div>
 
 </div>
 
@@ -57,6 +65,6 @@ Analyze Resume
 </div>
 
 </div>
-
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

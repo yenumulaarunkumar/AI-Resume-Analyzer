@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>AI Resume Analyzer</title>
 
@@ -14,21 +15,22 @@
 
 <body>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 
     <div class="card shadow-lg p-5">
 
-        <h1 class="text-center text-primary mb-5">
+        <h1 class="text-center text-primary mb-4">
+            <i class="fa-solid fa-file-circle-check"></i>
             AI Resume Analyzer
         </h1>
 
-        <!-- Dashboard Cards -->
-        <div class="row text-center mb-4">
+        <!-- Dashboard -->
+        <div class="row text-center">
 
             <div class="col-md-3 mb-3">
-                <div class="card bg-primary text-white h-100">
+                <div class="card bg-primary text-white">
                     <div class="card-body">
-                        <i class="fa-solid fa-chart-line fa-2x mb-3"></i>
+                        <i class="fa-solid fa-chart-line fa-2x mb-2"></i>
                         <h3>{{ score }}/100</h3>
                         <p>ATS Score</p>
                     </div>
@@ -36,9 +38,9 @@
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card bg-success text-white h-100">
+                <div class="card bg-success text-white">
                     <div class="card-body">
-                        <i class="fa-solid fa-file-lines fa-2x mb-3"></i>
+                        <i class="fa-solid fa-file-lines fa-2x mb-2"></i>
                         <h3>{{ match }}%</h3>
                         <p>Resume Match</p>
                     </div>
@@ -46,9 +48,9 @@
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card bg-info text-white h-100">
+                <div class="card bg-info text-white">
                     <div class="card-body">
-                        <i class="fa-solid fa-code fa-2x mb-3"></i>
+                        <i class="fa-solid fa-code fa-2x mb-2"></i>
                         <h3>{{ skills|length }}</h3>
                         <p>Skills Found</p>
                     </div>
@@ -56,9 +58,9 @@
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card bg-danger text-white h-100">
+                <div class="card bg-danger text-white">
                     <div class="card-body">
-                        <i class="fa-solid fa-triangle-exclamation fa-2x mb-3"></i>
+                        <i class="fa-solid fa-triangle-exclamation fa-2x mb-2"></i>
                         <h3>{{ missing|length }}</h3>
                         <p>Missing Skills</p>
                     </div>
@@ -71,11 +73,15 @@
 
         <h3>Detected Skills</h3>
 
-        {% for skill in skills %}
-            <span class="badge bg-success p-2 m-1 fs-6">
-                {{ skill }}
-            </span>
-        {% endfor %}
+        {% if skills %}
+            {% for skill in skills %}
+                <span class="badge bg-success p-2 m-1 fs-6">
+                    {{ skill }}
+                </span>
+            {% endfor %}
+        {% else %}
+            <p class="text-danger">No skills detected.</p>
+        {% endif %}
 
         <hr>
 
@@ -88,23 +94,25 @@
                 </span>
             {% endfor %}
         {% else %}
-            <p class="text-success">🎉 No missing skills found.</p>
+            <div class="alert alert-success">
+                🎉 No missing skills found.
+            </div>
         {% endif %}
 
         <hr>
-<hr>
 
-<h3>Skills Analysis</h3>
+        <h3>Skills Analysis</h3>
 
-<div style="width:400px; margin:auto;">
-    <canvas id="skillsChart"></canvas>
-</div>
+        <div style="max-width:400px; margin:auto;">
+            <canvas id="skillsChart"></canvas>
+        </div>
 
-<hr>
+        <hr>
+
         <h3>Suggestions</h3>
 
         {% if suggestions %}
-            <ul class="list-group">
+            <ul class="list-group mb-4">
                 {% for suggestion in suggestions %}
                     <li class="list-group-item">
                         {{ suggestion }}
@@ -112,32 +120,89 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <p class="text-success">Your resume already covers the required skills.</p>
+            <div class="alert alert-info">
+                No suggestions available.
+            </div>
         {% endif %}
+
+        <hr>
+
+        <h3>Resume Feedback</h3>
+
+        {% if feedback %}
+            <ul class="list-group mb-4">
+                {% for item in feedback %}
+                    <li class="list-group-item">
+                        {{ item }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-success">
+                Great! No additional feedback available.
+            </div>
+        {% endif %}
+
+        <hr>
+
+        <div class="d-flex gap-3">
+
+            <a href="/download" class="btn btn-success">
+                <i class="fa-solid fa-download"></i>
+                Download PDF Report
+            </a>
+
+            <a href="/history" class="btn btn-primary">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                View History
+            </a>
+
+            <a href="/" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Analyze Another Resume
+            </a>
+
+        </div>
 
         <hr>
 
         <h3>Extracted Resume</h3>
 
-        <pre>{{ text }}</pre>
+        <div class="border rounded p-3 bg-light">
+            <pre style="white-space: pre-wrap;">{{ text }}</pre>
+        </div>
 
     </div>
 
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-const ctx = document.getElementById('skillsChart');
+const ctx = document.getElementById("skillsChart");
 
 new Chart(ctx, {
-    type: 'pie',
+    type: "pie",
     data: {
-        labels: ['Skills Found', 'Missing Skills'],
+        labels: ["Skills Found", "Missing Skills"],
         datasets: [{
-            data: [{{ skills|length }}, {{ missing|length }}]
+            data: [{{ skills|length }}, {{ missing|length }}],
+            backgroundColor: [
+                "#198754",
+                "#dc3545"
+            ]
         }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
     }
 });
 </script>
+
 </body>
 </html>

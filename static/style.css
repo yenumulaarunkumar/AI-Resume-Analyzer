@@ -54,3 +54,16 @@ pre{
 .badge{
     font-size:14px;
 }
+#drop-area{
+    cursor:pointer;
+    transition:0.3s;
+}
+
+#drop-area:hover{
+    background:#eef5ff;
+}
+
+#drop-area p{
+    margin:8px;
+    font-weight:bold;
+}
